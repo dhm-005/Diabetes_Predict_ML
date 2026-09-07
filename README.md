@@ -4,38 +4,40 @@ Hệ thống dự đoán khả năng mắc bệnh tiểu đường sử dụng M
 
 ## Công nghệ sử dụng
 
-* Python
-* Scikit-learn
-* Pandas
-* NumPy
-* Flask
-* Jupyter Notebook
-* VS Code / Anaconda
+- Python
+- Scikit-learn
+- Pandas
+- NumPy
+- Flask
+- Jupyter Notebook
+- VS Code / Anaconda
 
 ## Cách chạy hệ thống
 
 ### 1. Clone repository
-
-git clone <repository-url>
+```bash
+git clone https://github.com/dhm-005/Diabetes_Predict_ML.git
 
 cd Diabetes_Predict_ML
+```
 
 ### 2. Tạo môi trường
-
+```bash
 conda create -n diabetes-env python=3.10
 
 conda activate diabetes-env
+```
 
 ### 3. Cài đặt thư viện
-
+```bash
 pip install -r requirements.txt
+```
 
 ### 4. Chạy ứng dụng
-
+```bash
 python app.py
-
+```
 Sau đó truy cập:
-
 http://127.0.0.1:5000
 
 ## Huấn luyện mô hình
