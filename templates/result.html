@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Diabetes Prediction</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .info{
+            display: grid;
+            grid-template-columns: 2fr 2fr;
+        }
+        .group {
+            margin-bottom: 16px;
+            gap: 10px;
+            display: flex;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .label:hover {
+            color: #555;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            text-align: center;
+            border-radius: 6px;
+            background: #f0f0f0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .info{
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Diabetes Prediction</h1>
+
+        <div class="info">
+            <div class="group">
+                <div class="label">Pregnancies:</div>
+                <div>{{ form_data['Pregnancies'] if form_data else 0 }}</div>
+            </div>
+    
+            <div class="group">
+                <div class="label">Glucose:</div>
+                <div>{{ form_data['Glucose'] if form_data else 100 }}</div>
+            </div>
+
+            <div class="group">
+                <div class="label">Blood Pressure:</div>
+                <div>{{ form_data['BloodPressure'] if form_data else 65 }}</div>
+            </div>
+
+            <div class="group">
+                <div class="label">Skin Thickness:</div>
+                <div>{{ form_data['SkinThickness'] if form_data else 0 }}</div>
+            </div>
+            <div class="group">
+                <div class="label">Insulin:</div>
+                <div>{{ form_data['Insulin'] if form_data else 0 }}</div>
+            </div>
+            <div class="group">
+                <div class="label">BMI:</div>
+                <div>{{ form_data['BMI'] if form_data else 35 }}</div>
+            </div>
+            <div class="group">
+                <div class="label">Diabetes Pedigree Function:</div>
+                <div>{{ form_data['DiabetesPedigreeFunction'] if form_data else 0.3 }}</div>
+            </div>
+            <div class="group">
+                <div class="label">Age:</div>
+                <div>{{ form_data['Age'] if form_data else 22 }}</div>
+            </div>
+        </div>
+
+        {% if prediction is defined %}
+            <div class="result">
+                {% if prediction == 1 %}
+                    Prediction: You might have diabetes.
+                {% else %}
+                    Prediction: You might not have diabetes.
+                {% endif %}
+
+                    I'm about
+                    <span style="color: {{ confidence_color }}">
+                        {{ "%.1f"|format(confidence) }}%
+                    </span>
+                    confident about my prediction.
+                
+            </div>
+        {% endif %}
+
+
+    </div>
+
+</body>
+
+</html>
