@@ -1,194 +1,437 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
-
-    <!-- Quan trọng để responsive trên mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Diabetes Prediction</title>
-
+    <title>Dự đoán nguy cơ tiểu đường</title>
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 20px;
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
+            min-height: 100vh;
+            background: #f4f7fb;
+            color: #1f2937;
         }
+
+    /* =========================
+    HEADER
+    ========================= */
+
+        header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 35px 20px 70px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.6;
+        }
+
+    /* =========================
+    MAIN CONTAINER
+    ========================= */
 
         .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
         }
 
-        h1 {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 25px;
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-card h2 {
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .form-description {
+            color: #6b7280;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+    /* =========================
+    FORM GRID
+    ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
         }
 
         label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
         }
 
-        input:focus {
+        input:focus,
+        select:focus {
             outline: none;
-            border-color: #555;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .hint {
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+    /* =========================
+    BUTTON
+    ========================= */
+
+        .button-container {
+            margin-top: 30px;
+            text-align: center;
         }
 
         button {
             width: 100%;
-            padding: 13px;
-            margin-top: 10px;
+            padding: 15px;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-        }
-        .info{
-            display: grid;
-            grid-template-columns: 2fr 2fr;
-            column-gap: 30px;
+            transition: 0.2s;
         }
 
-        /* Mobile */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+    /* =========================
+    DISCLAIMER
+    ========================= */
+
+        .notice {
+            margin-top: 25px;
+            padding: 15px;
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #713f12;
+            line-height: 1.5;
+        }
+
+    /* =========================
+    FOOTER
+    ========================= */
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+    /* =========================
+    MOBILE
+    ========================= */
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 30px 18px 60px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
             }
 
             .container {
-                padding: 20px;
-                border-radius: 8px;
+                padding: 0 12px;
             }
 
-            h1 {
-                font-size: 24px;
+            .form-card {
+                padding: 22px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
             }
 
             input,
-            button {
-                font-size: 16px;
-            }
-            .info{
-                display: flex;
-                flex-direction: column;
+            select {
+                padding: 12px;
             }
         }
     </style>
+
 </head>
 
 <body>
 
-    <div class="container">
+    <header>
+        <h1>Hệ thống dự đoán nguy cơ tiểu đường</h1>
 
-        <h1>Diabetes Prediction</h1>
+        <p>
+            Nhập các thông tin sức khỏe cơ bản để hệ thống sử dụng mô hình
+            Machine Learning dự đoán nguy cơ mắc bệnh tiểu đường.
+        </p>
+    </header>
 
-        <form method="POST" action="{{ url_for('predict') }}">
-            <div class="info">
-            <div class="form-group">
-                <label for="Pregnancies">Pregnancies</label>
-                <input type="number" 
-                    id="Pregnancies" name="Pregnancies"
-                    value="{{ form_data['Pregnancies'] if form_data else 0 }}" min="0"
-                    required
-                >
-            </div>
+    <main class="container">
 
-            <div class="form-group">
-                <label for="Glucose">Glucose</label>
-                <input type="number"
-                    id="Glucose" name="Glucose"
-                    value="{{ form_data['Glucose'] if form_data else 100 }}" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="BloodPressure">Blood Pressure</label>
-                <input type="number"
-                    id="BloodPressure" name="BloodPressure"
-                    value="{{ form_data['BloodPressure'] if form_data else 65 }}" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="SkinThickness">Skin Thickness</label>
-                <input type="number"
-                    id="SkinThickness" name="SkinThickness"
-                    value="{{ form_data['SkinThickness'] if form_data else 0 }}" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="Insulin">Insulin</label>
-                <input type="number"
-                    id="Insulin" name="Insulin"
-                    value="{{ form_data['Insulin'] if form_data else 0 }}" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="BMI">BMI</label>
-                <input type="number"
-                    id="BMI" name="BMI"
-                    value="{{ form_data['BMI'] if form_data else 35 }}"
-                    step="0.1" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="DiabetesPedigreeFunction">
-                    Diabetes Pedigree Function
-                </label>
+        <section class="form-card">
+            <h2>Thông tin cá nhân và sức khỏe</h2>
+            <p class="form-description">
+                Vui lòng nhập đầy đủ các thông tin bên dưới để nhận kết quả dự đoán.
+            </p>
 
-                <input type="number"
-                    id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction"
-                    value="{{ form_data['DiabetesPedigreeFunction'] if form_data else 0.3 }}"
-                    step="0.01" min="0"
-                    required
-                >
-            </div>
-            <div class="form-group">
-                <label for="Age">Age</label>
+            <!-- =========================
+                FORM
+            ========================== -->
 
-                <input type="number"
-                    id="Age" name="Age"
-                    value="{{ form_data['Age'] if form_data else 22 }}" min="0"
-                    required
-                >
-            </div>
-            </div>
-            <button type="submit">
-                Predict
-            </button>
+            <form action="/predict" method="POST">
 
-        </form>
+                <div class="form-grid">
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <label for="gender">Giới tính</label>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>
+                                Chọn giới tính
+                            </option>
+                            <option value="Female"> Nữ </option>
+                            <option value="Male"> Nam </option>
+                        </select>
+                    </div>
 
-    </div>
+
+                    <!-- Age -->
+                    <div class="form-group">
+                        <label for="age"> Tuổi </label>
+                        <input type="number" id="age" name="age" 
+                                min="1" max="120" placeholder="Ví dụ: 35" required>
+                    </div>
+
+                    <!-- Hypertension -->
+                    <div class="form-group">
+                        <label for="hypertension"> Tăng huyết áp </label>
+
+                        <select id="hypertension" name="hypertension" required>
+                            <option value="" disabled selected>
+                                Chọn tình trạng
+                            </option>
+                            <option value="0"> Không </option>
+                            <option value="1"> Có </option>
+                        </select>
+                    </div>
+
+                    <!-- Heart Disease -->
+                    <div class="form-group">
+                        <label for="heart_disease"> Bệnh tim </label>
+
+                        <select id="heart_disease" name="heart_disease" required>
+
+                            <option value="" disabled selected>
+                                Chọn tình trạng
+                            </option>
+
+                            <option value="0">
+                                Không
+                            </option>
+
+                            <option value="1">
+                                Có
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Smoking -->
+
+                    <div class="form-group full-width">
+
+                        <label for="smoking_history">
+                            Tiền sử hút thuốc
+                        </label>
+
+                        <select id="smoking_history" name="smoking_history" required>
+
+                            <option value="" disabled selected>
+                                Chọn tiền sử hút thuốc
+                            </option>
+
+                            <option value="No Info">
+                                Không có thông tin
+                            </option>
+
+                            <option value="never">
+                                Chưa từng hút
+                            </option>
+
+                            <option value="former">
+                                Đã từng hút
+                            </option>
+
+                            <option value="current">
+                                Đang hút
+                            </option>
+
+                            <option value="ever">
+                                Đã từng hút
+                            </option>
+
+                            <option value="not current">
+                                Hiện không hút
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BMI -->
+
+                    <div class="form-group">
+
+                        <label for="bmi">
+                            Chỉ số BMI
+                        </label>
+
+                        <input type="number" id="bmi" name="bmi" step="0.1" min="1" max="100" placeholder="Ví dụ: 24.5"
+                            required>
+
+                        <span class="hint">
+                            Chỉ số khối cơ thể
+                        </span>
+
+                    </div>
+
+
+                    <!-- HbA1c -->
+                    <div class="form-group">
+
+                        <label for="HbA1c_level">
+                            HbA1c Level
+                        </label>
+
+                        <input type="number"
+                            id="HbA1c_level" name="HbA1c_level"
+                            step="0.1" min="1" max="20"
+                            placeholder="Ví dụ: 5.5" required>
+
+                        <span class="hint">
+                            Chỉ số đường huyết trung bình
+                        </span>
+
+                    </div>
+
+
+                    <!-- Blood Glucose -->
+                    <div class="form-group full-width">
+
+                        <label for="blood_glucose_level">
+                            Blood Glucose Level
+                        </label>
+                        <input type="number" 
+                            id="blood_glucose_level" name="blood_glucose_level" 
+                            step="1" min="1" max="500" 
+                            placeholder="Ví dụ: 120" required>
+
+                        <span class="hint">
+                            Nồng độ glucose trong máu
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                    SUBMIT
+                ========================== -->
+
+                <div class="button-container">
+                    <button type="submit">
+                        Dự đoán nguy cơ
+                    </button>
+                </div>
+
+                <!-- =========================
+                    NOTICE
+                ========================== -->
+
+                <div class="notice">
+                    <strong>Lưu ý:</strong>
+                    Kết quả dự đoán và các khuyến nghị chỉ mang tính chất tham khảo,
+                    được tạo dựa trên mô hình Machine Learning và dữ liệu huấn luyện.
+                    Hệ thống không thay thế cho việc chẩn đoán hoặc tư vấn từ chuyên gia y tế.
+                </div>
+
+            </form>
+        </section>
+    </main>
+
+
+    <!-- =========================
+        FOOTER
+    ========================== -->
+    <footer>
+        Diabetes Prediction System · Machine Learning Project
+    </footer>
 
 </body>
 
