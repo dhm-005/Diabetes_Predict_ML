@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kết quả dự đoán</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            text-align: center;
+            padding: 30px 20px 65px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: -35px auto 40px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* RESULT */
+        .result-card {
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .result-positive {
+            color: #dc2626;
+        }
+
+        .result-negative {
+            color: #16a34a;
+        }
+
+        .confidence {
+            margin: 20px auto 0;
+            max-width: 500px;
+        }
+
+        .confidence-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .progress {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: {{ confidence }}%;
+            background: {{ confidence_color }};
+            border-radius: 20px;
+        }
+
+        .confidence-value {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        /* INPUT DATA */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .data-item {
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .data-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .data-value {
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        /* ADVICE */
+        .advice-item {
+            border-left: 4px solid;
+            padding: 15px;
+            margin-bottom: 14px;
+            border-radius: 5px;
+            background: #f8fafc;
+        }
+
+        .advice-high {
+            border-color: #f59e0b;
+        }
+
+        .advice-low {
+            border-color: #3b82f6;
+        }
+
+        .advice-feature {
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .advice-detail {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 7px;
+        }
+
+        .advice-message {
+            line-height: 1.5;
+        }
+
+        .no-advice {
+            padding: 18px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            color: #166534;
+            line-height: 1.5;
+        }
+
+        /* NOTICE */
+        .notice {
+            padding: 15px;
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #713f12;
+        }
+
+        /* BUTTON */
+        .button-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-button {
+            display: inline-block;
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 13px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        /* MOBILE */
+        @media (max-width: 650px) {
+            header {
+                padding: 25px 15px 55px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 20px 18px;
+                border-radius: 12px;
+            }
+
+            .result-title {
+                font-size: 1.4rem;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-icon {
+                font-size: 2.5rem;
+            }
+
+            .back-button {
+                width: 100%;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Kết quả dự đoán</h1>
+        <p>Kết quả được tạo bởi hệ thống Machine Learning</p>
+    </header>
+
+    <main class="container">
+
+        <!-- PREDICTION RESULT -->
+        <section class="card result-card">
+
+            {% if prediction == 1 %}
+                <div class="result-icon">⚠️</div>
+
+                <div class="result-title result-positive">
+                    Mô hình dự đoán có nguy cơ tiểu đường
+                </div>
+
+                <p>
+                    Mô hình phân loại mẫu dữ liệu vào lớp
+                    <strong>tiểu đường</strong>.
+                </p>
+            {% else %}
+                <div class="result-icon">✓</div>
+
+                <div class="result-title result-negative">
+                    Mô hình không phân loại vào lớp tiểu đường
+                </div>
+
+                <p>
+                    Mô hình phân loại mẫu dữ liệu vào lớp
+                    <strong>không tiểu đường</strong>.
+                </p>
+            {% endif %}
+
+            <div class="confidence">
+                <div class="confidence-label">
+                    <span>Xác suất dự đoán</span>
+                    <span>{{ confidence }}%</span>
+                </div>
+
+                <div
+                    class="progress"
+                    role="progressbar"
+                    aria-label="Xác suất dự đoán"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="{{ confidence }}"
+                >
+                    <div class="progress-bar"></div>
+                </div>
+
+                <div
+                    class="confidence-value"
+                    style="color: {{ confidence_color }};"
+                >
+                    {{ confidence }}%
+                </div>
+            </div>
+        </section>
+
+        <!-- INPUT DATA -->
+        <section class="card">
+            <h2 class="section-title">Thông tin đã nhập</h2>
+
+            <div class="data-grid">
+
+                <div class="data-item">
+                    <span class="data-label">Giới tính</span>
+                    <span class="data-value">
+                        {% if form_data["gender"] == "Female" %}
+                            Nữ
+                        {% elif form_data["gender"] == "Male" %}
+                            Nam
+                        {% else %}
+                            {{ form_data["gender"] }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Tuổi</span>
+                    <span class="data-value">{{ form_data["age"] }}</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Chủng tộc</span>
+                    <span class="data-value">
+                        {{ form_data["race"] }}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Tăng huyết áp</span>
+                    <span class="data-value">
+                        {% if form_data["hypertension"]|string == "1" %}
+                            Có
+                        {% else %}
+                            Không
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Bệnh tim</span>
+                    <span class="data-value">
+                        {% if form_data["heart_disease"]|string == "1" %}
+                            Có
+                        {% else %}
+                            Không
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Tiền sử hút thuốc</span>
+                    <span class="data-value">
+                        {% if form_data["smoking_history"] == "No Info" %}
+                            Không có thông tin
+                        {% elif form_data["smoking_history"] == "never" %}
+                            Chưa từng hút
+                        {% elif form_data["smoking_history"] == "former" %}
+                            Đã từng hút
+                        {% elif form_data["smoking_history"] == "current" %}
+                            Đang hút
+                        {% elif form_data["smoking_history"] == "ever" %}
+                            Từng hút
+                        {% elif form_data["smoking_history"] == "not current" %}
+                            Hiện không hút
+                        {% else %}
+                            {{ form_data["smoking_history"] }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">BMI</span>
+                    <span class="data-value">{{ form_data["bmi"] }}</span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">HbA1c Level</span>
+                    <span class="data-value">
+                        {{ form_data["hbA1c_level"] }}
+                    </span>
+                </div>
+
+                <div class="data-item">
+                    <span class="data-label">Blood Glucose Level</span>
+                    <span class="data-value">
+                        {{ form_data["blood_glucose_level"] }}
+                    </span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ADVICE -->
+        <section class="card">
+            <h2 class="section-title">Khuyến nghị</h2>
+
+            {% if advice %}
+                {% for item in advice %}
+                    <div class="advice-item
+                        {% if item.status == 'high' %}
+                            advice-high
+                        {% else %}
+                            advice-low
+                        {% endif %}">
+
+                        <div class="advice-feature">
+                            {% if item.feature == "bmi" %}
+                                BMI
+                            {% elif item.feature == "hbA1c_level" %}
+                                HbA1c Level
+                            {% elif item.feature == "blood_glucose_level" %}
+                                Blood Glucose Level
+                            {% elif item.feature == "age" %}
+                                Tuổi
+                            {% else %}
+                                {{ item.feature }}
+                            {% endif %}
+                        </div>
+
+                        <div class="advice-detail">
+                            Giá trị của bạn:
+                            <strong>{{ item.value }}</strong>
+                            &nbsp;|&nbsp;
+                            Mức tham chiếu:
+                            <strong>{{ item.reference }}</strong>
+                        </div>
+
+                        <div class="advice-message">
+                            {{ item.message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-advice">
+                    Không có chỉ số nào được đánh dấu theo tiêu chí tham chiếu
+                    của hệ thống. Điều này không đồng nghĩa với việc bạn chắc chắn
+                    không mắc bệnh hoặc không có nguy cơ.
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- NOTICE -->
+        <section class="card">
+            <div class="notice">
+                <strong>Lưu ý:</strong>
+                Kết quả chỉ phản ánh dự đoán của mô hình Machine Learning,
+                không phải chẩn đoán y khoa. Xác suất do mô hình đưa ra không
+                nhất thiết tương ứng với nguy cơ mắc bệnh thực tế. Nếu lo ngại
+                về sức khỏe, hãy trao đổi với chuyên gia y tế.
+            </div>
+
+            <div class="button-container">
+                <a href="{{ url_for('home') }}" class="back-button">
+                    ← Nhập lại thông tin
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        Diabetes Prediction System · Machine Learning Project
+    </footer>
+
+</body>
+</html>
